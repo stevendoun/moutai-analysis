@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贵州茅台 | 深度分析报告 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        :root {
+            --primary: #8B0000;
+            --primary-light: #C41E3A;
+            --primary-dark: #5C0000;
+            --gold: #D4AF37;
+            --gold-light: #F4D03F;
+            --dark: #1a1a2e;
+            --darker: #0f0f1a;
+            --text: #e8e8e8;
+            --text-muted: #a0a0a0;
+            --card-bg: rgba(26, 26, 46, 0.8);
+            --gradient-primary: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .loading-bar::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-gold);
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(15, 15, 26, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo i {
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            animation: heroFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-5%, -5%) rotate(5deg); }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-100px) translateX(50px); opacity: 0.8; }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-title .highlight {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .hero-desc {
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 1s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator i {
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-title .highlight {
+            color: var(--gold);
+        }
+
+        .section-desc {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text-muted);
+        }
+
+        /* Key Metrics Section */
+        .metrics-section {
+            background: linear-gradient(180deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
+        }
+
+        .metric-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .metric-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--gradient-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-icon i {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        .metric-change.positive {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .metric-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* Stock Price Section */
+        .stock-section {
+            background: var(--dark);
+        }
+
+        .stock-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stock-price-display {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stock-symbol {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .current-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .price-currency {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        .price-change {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .price-change span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .stock-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .stock-info-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stock-info-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.3rem;
+        }
+
+        .stock-info-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            height: 400px;
+        }
+
+        /* Financial Performance */
+        .financial-section {
+            background: linear-gradient(180deg, var(--dark) 0%, var(--darker) 100%);
+        }
+
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 968px) {
+            .financial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .financial-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .financial-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .financial-card h3 i {
+            color: var(--gold);
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Products Section */
+        .products-section {
+            background: var(--darker);
+        }
+
+        .products-showcase {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .product-tab {
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .product-tab:hover, .product-tab.active {
+            background: var(--gradient-gold);
+            color: var(--dark);
+            border-color: transparent;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .product-image i {
+            font-size: 4rem;
+            color: var(--gold);
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .product-tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--gold);
+        }
+
+        /* Strategy Section */
+        .strategy-section {
+            background: var(--dark);
+        }
+
+        .strategy-timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .strategy-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), var(--primary));
+            transform: translateX(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .strategy-timeline::before {
+                left: 20px;
+            }
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item, .timeline-item:nth-child(odd) {
+                flex-direction: row;
+                padding-left: 50px;
+            }
+        }
+
+        .timeline-content {
+            width: calc(50% - 40px);
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-content {
+                width: 100%;
+            }
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 4px solid var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        .timeline-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-icon i {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Analyst Section */
+        .analyst-section {
+            background: linear-gradient(180deg, var(--dark) 0%, var(--darker) 100%);
+        }
+
+        .analyst-overview {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .analyst-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 968px) {
+            .analyst-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analyst-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .analyst-card.featured {
+            background: var(--gradient-primary);
+            transform: scale(1.05);
+        }
+
+        .analyst-rating {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .analyst-card.featured .analyst-rating {
+            color: var(--gold);
+        }
+
+        .analyst-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .analyst-card.featured .analyst-label {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .consensus-bar {
+            display: flex;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .consensus-buy {
+            background: #22c55e;
+        }
+
+        .consensus-hold {
+            background: #eab308;
+        }
+
+        .consensus-sell {
+            background: #ef4444;
+        }
+
+        .risk-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .risk-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .risk-item i {
+            font-size: 1.5rem;
+            color: var(--primary-light);
+        }
+
+        .risk-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .risk-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .footer-disclaimer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--darker);
+                flex-direction: column;
+                padding: 5rem 2rem;
+                transition: right 0.3s ease;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .hero-stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Counter Animation */
+        .counter {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-logo">贵州茅台</div>
+        <div class="loading-bar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="nav-logo">
+            <i class="fas fa-wine-bottle"></i>
+            贵州茅台分析
+        </a>
+        <ul class="nav-links">
+            <li><a href="#metrics">核心指标</a></li>
+            <li><a href="#stock">股价行情</a></li>
+            <li><a href="#financial">财务表现</a></li>
+            <li><a href="#products">产品矩阵</a></li>
+            <li><a href="#strategy">战略布局</a></li>
+            <li><a href="#analyst">分析师观点</a></li>
+        </ul>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="floating-particles" id="particles"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-chart-line"></i>
+                2026年1月 深度分析报告
+            </div>
+            <h1 class="hero-title">
+                <span class="highlight">贵州茅台</span><br>
+                投资价值分析
+            </h1>
+            <p class="hero-subtitle">600519.SH | 中国白酒行业龙头</p>
+            <p class="hero-desc">
+                连续七年蝉联Kantar BrandZ全球最具价值品牌榜酒类第一，
+                品牌价值达872.98亿美元，开启高质量发展新篇章
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value counter" data-target="1382">0</span>
+                    <span class="hero-stat-label">当前股价 (元)</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value counter" data-target="1.74">0</span>
+                    <span class="hero-stat-label">市值 (万亿元)</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value counter" data-target="91.9">0</span>
+                    <span class="hero-stat-label">毛利率 (%)</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value counter" data-target="39">0</span>
+                    <span class="hero-stat-label">ROE (%)</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Key Metrics Section -->
+    <section class="metrics-section" id="metrics">
+        <div class="section-header fade-in">
+            <span class="section-tag">核心数据</span>
+            <h2 class="section-title">关键财务<span class="highlight">指标</span></h2>
+            <p class="section-desc">贵州茅台2025年前三季度及全年业绩预测概览</p>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="metric-value">1309亿</div>
+                <div class="metric-label">2025年前三季度营收</div>
+                <span class="metric-change positive">
+                    <i class="fas fa-arrow-up"></i> +6.32%
+                </span>
+            </div>
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="metric-value">646亿</div>
+                <div class="metric-label">2025年前三季度净利润</div>
+                <span class="metric-change positive">
+                    <i class="fas fa-arrow-up"></i> +6.25%
+                </span>
+            </div>
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="metric-value">91.93%</div>
+                <div class="metric-label">综合毛利率</div>
+                <span class="metric-change negative">
+                    <i class="fas fa-arrow-down"></i> -0.03pp
+                </span>
+            </div>
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div class="metric-value">3.65%</div>
+                <div class="metric-label">股息率</div>
+                <span class="metric-change positive">
+                    <i class="fas fa-check"></i> 稳健分红
+                </span>
+            </div>
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-globe-asia"></i>
+                </div>
+                <div class="metric-value">28.93亿</div>
+                <div class="metric-label">海外营收 (上半年)</div>
+                <span class="metric-change positive">
+                    <i class="fas fa-arrow-up"></i> +31.29%
+                </span>
+            </div>
+            <div class="metric-card fade-in">
+                <div class="metric-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="metric-value">7600万+</div>
+                <div class="metric-label">i茅台注册用户</div>
+                <span class="metric-change positive">
+                    <i class="fas fa-arrow-up"></i> 持续增长
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stock Price Section -->
+    <section class="stock-section" id="stock">
+        <div class="section-header fade-in">
+            <span class="section-tag">市场表现</span>
+            <h2 class="section-title">股价<span class="highlight">行情</span></h2>
+            <p class="section-desc">实时股价数据与市场估值分析</p>
+        </div>
+        <div class="stock-container">
+            <div class="stock-header fade-in">
+                <div class="stock-price-display">
+                    <div class="stock-symbol">600519.SH 贵州茅台</div>
+                    <div class="current-price">
+                        <span class="price-currency">¥</span>1,382.00
+                    </div>
+                    <div class="price-change">
+                        <span style="color: #ef4444;">
+                            <i class="fas fa-arrow-down"></i> -6.89 (-0.50%)
+                        </span>
+                        <span style="color: var(--text-muted);">
+                            2026-01-16
+                        </span>
+                    </div>
+                </div>
+                <div class="stock-info-grid">
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">20.44</div>
+                        <div class="stock-info-label">市盈率 (TTM)</div>
+                    </div>
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">18.83</div>
+                        <div class="stock-info-label">预测市盈率</div>
+                    </div>
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">13.63</div>
+                        <div class="stock-info-label">EV/EBITDA</div>
+                    </div>
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">0.00</div>
+                        <div class="stock-info-label">资产负债率</div>
+                    </div>
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">¥1,377</div>
+                        <div class="stock-info-label">52周最低</div>
+                    </div>
+                    <div class="stock-info-item">
+                        <div class="stock-info-value">¥1,658</div>
+                        <div class="stock-info-label">52周最高</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container fade-in">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Performance Section -->
+    <section class="financial-section" id="financial">
+        <div class="section-header fade-in">
+            <span class="section-tag">财务分析</span>
+            <h2 class="section-title">业绩<span class="highlight">表现</span></h2>
+            <p class="section-desc">近年营收与利润增长趋势，洞察公司成长轨迹</p>
+        </div>
+        <div class="financial-grid">
+            <div class="financial-card fade-in">
+                <h3><i class="fas fa-chart-bar"></i> 营业收入 (亿元)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            <div class="financial-card fade-in">
+                <h3><i class="fas fa-chart-line"></i> 净利润 (亿元)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="profitChart"></canvas>
+                </div>
+            </div>
+            <div class="financial-card fade-in">
+                <h3><i class="fas fa-wine-glass-alt"></i> 产品营收结构 (2024)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+            <div class="financial-card fade-in">
+                <h3><i class="fas fa-funnel-dollar"></i> 盈利能力指标 (%)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="profitabilityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section" id="products">
+        <div class="section-header fade-in">
+            <span class="section-tag">产品矩阵</span>
+            <h2 class="section-title">核心<span class="highlight">产品</span></h2>
+            <p class="section-desc">覆盖100元至5000元各主流消费价位段的产品体系</p>
+        </div>
+        <div class="products-showcase">
+            <div class="product-tabs fade-in">
+                <button class="product-tab active">全部产品</button>
+                <button class="product-tab">茅台酒</button>
+                <button class="product-tab">系列酒</button>
+            </div>
+            <div class="products-grid">
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">53度飞天茅台</h3>
+                        <div class="product-price">¥1,499/瓶</div>
+                        <p class="product-desc">500ml经典款，茅台核心大单品，国酒代表作</p>
+                        <span class="product-tag">旗舰产品</span>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">精品茅台</h3>
+                        <div class="product-price">¥2,000+/瓶</div>
+                        <p class="product-desc">高端定位，品质卓越，满足高端消费需求</p>
+                        <span class="product-tag">高端系列</span>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">茅台1935</h3>
+                        <div class="product-price">¥600+/瓶</div>
+                        <p class="product-desc">千元价位带核心单品，上市三年销售近300亿</p>
+                        <span class="product-tag">明星产品</span>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">汉酱</h3>
+                        <div class="product-price">¥300+/瓶</div>
+                        <p class="product-desc">系列酒核心产品，"一体两翼"战略支柱</p>
+                        <span class="product-tag">系列酒</span>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-chess-king"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">茅台王子酒</h3>
+                        <div class="product-price">¥100-300/瓶</div>
+                        <p class="product-desc">大众消费市场主力，覆盖广泛消费群体</p>
+                        <span class="product-tag">大众系列</span>
+                    </div>
+                </div>
+                <div class="product-card fade-in">
+                    <div class="product-image">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">生肖酒/年份酒</h3>
+                        <div class="product-price">¥3,000+/瓶</div>
+                        <p class="product-desc">限量发行，收藏属性强，2026年将优化配额</p>
+                        <span class="product-tag">限量版</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section class="strategy-section" id="strategy">
+        <div class="section-header fade-in">
+            <span class="section-tag">战略布局</span>
+            <h2 class="section-title">发展<span class="highlight">战略</span></h2>
+            <p class="section-desc">从高速增长向高质量发展换档期的战略转型之路</p>
+        </div>
+        <div class="strategy-timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h4 class="timeline-title">渠道改革 - i茅台平台</h4>
+                    <p class="timeline-text">
+                        2026年飞天茅台正式登陆i茅台平台，注册用户突破7600万，
+                        累计销售超600亿元。构建自售、经销、代售、寄售多维协同销售模式。
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h4 class="timeline-title">产品矩阵优化</h4>
+                    <p class="timeline-text">
+                        2026年增量聚焦茅台1935、飞天茅台、精品茅台三大核心单品，
+                        锚定600+、1500、2000+元价格带，构建"金字塔"型产品体系。
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h4 class="timeline-title">国际化战略</h4>
+                    <p class="timeline-text">
+                        2025上半年海外营收28.93亿元，同比增长31.29%。
+                        国外经销商达115家，计划开辟12个战略市场，明确64个重点与潜力市场。
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h4 class="timeline-title">产能扩张</h4>
+                    <p class="timeline-text">
+                        "十四五技改项目"建成后新增产能约1.98万吨/年。
+                        到2027年茅台酒产能预计达7.7万吨，2035年有望突破10万吨。
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 class="timeline-title">股东回报</h4>
+                    <p class="timeline-text">
+                        2025年计划分红约300亿元，回购股份15-30亿元。
+                        茅台集团计划增持30-33亿元，彰显对公司长期价值的信心。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analyst Section -->
+    <section class="analyst-section" id="analyst">
+        <div class="section-header fade-in">
+            <span class="section-tag">投资评级</span>
+            <h2 class="section-title">分析师<span class="highlight">观点</span></h2>
+            <p class="section-desc">来自38家机构的投资建议与目标价预测</p>
+        </div>
+        <div class="analyst-overview">
+            <div class="analyst-cards fade-in">
+                <div class="analyst-card">
+                    <div class="analyst-rating">¥1,489</div>
+                    <div class="analyst-label">最低目标价</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        +7.7% 溢价空间
+                    </p>
+                </div>
+                <div class="analyst-card featured">
+                    <div class="analyst-rating">¥1,841</div>
+                    <div class="analyst-label">平均目标价</div>
+                    <p style="font-size: 0.85rem;">
+                        +33.2% 溢价空间
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <span style="background: var(--gold); color: var(--dark); padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600;">
+                            强烈推荐买入
+                        </span>
+                    </div>
+                </div>
+                <div class="analyst-card">
+                    <div class="analyst-rating">¥2,300</div>
+                    <div class="analyst-label">最高目标价</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        +66.4% 溢价空间
+                    </p>
+                </div>
+            </div>
+            <div class="financial-card fade-in" style="max-width: 600px; margin: 0 auto 3rem;">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;"><i class="fas fa-poll"></i> 分析师评级分布</h3>
+                <div class="consensus-bar" style="height: 30px; margin-bottom: 1rem;">
+                    <div class="consensus-buy" style="width: 79%;" title="买入 79%"></div>
+                    <div class="consensus-hold" style="width: 18%;" title="持有 18%"></div>
+                    <div class="consensus-sell" style="width: 3%;" title="卖出 3%"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                    <span><span style="color: #22c55e;">●</span> 买入/强烈推荐 30家 (79%)</span>
+                    <span><span style="color: #eab308;">●</span> 持有 7家 (18%)</span>
+                    <span><span style="color: #ef4444;">●</span> 卖出 1家 (3%)</span>
+                </div>
+            </div>
+
+            <div class="section-header fade-in" style="margin-top: 4rem;">
+                <h3 class="section-title" style="font-size: 1.5rem;">风险<span class="highlight">提示</span></h3>
+            </div>
+            <div class="risk-list fade-in">
+                <div class="risk-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <div class="risk-title">行业周期下行</div>
+                        <div class="risk-desc">白酒行业2025年前三季度营收同比下降5.83%，处于深度调整期</div>
+                    </div>
+                </div>
+                <div class="risk-item">
+                    <i class="fas fa-tag"></i>
+                    <div>
+                        <div class="risk-title">价格压力</div>
+                        <div class="risk-desc">飞天茅台批发价跌破1499元指导价，创2013年以来首次倒挂</div>
+                    </div>
+                </div>
+                <div class="risk-item">
+                    <i class="fas fa-warehouse"></i>
+                    <div>
+                        <div class="risk-title">渠道库存</div>
+                        <div class="risk-desc">合同负债从95.9亿降至55.1亿，下滑42.59%，反映经销商压力</div>
+                    </div>
+                </div>
+                <div class="risk-item">
+                    <i class="fas fa-chart-area"></i>
+                    <div>
+                        <div class="risk-title">增速放缓</div>
+                        <div class="risk-desc">Q3营收增速仅0.56%，创近十年新低，高增长时代或已过去</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-logo">
+                    <i class="fas fa-wine-bottle"></i> 贵州茅台分析
+                </div>
+                <div class="footer-links">
+                    <a href="#metrics">核心指标</a>
+                    <a href="#stock">股价行情</a>
+                    <a href="#financial">财务表现</a>
+                    <a href="#products">产品矩阵</a>
+                    <a href="#strategy">战略布局</a>
+                    <a href="#analyst">分析师观点</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-disclaimer">
+                    <strong>免责声明：</strong>本报告仅供参考，不构成投资建议。股票投资有风险，请根据自身风险承受能力做出投资决策。
+                    数据来源：新浪财经、东方财富、同花顺、雪球、Yahoo Finance、Investing.com等公开信息。
+                </p>
+                <p class="footer-copyright">
+                    © 2026 贵州茅台深度分析报告 | 数据更新日期: 2026年1月16日
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading-screen').classList.add('hidden');
+            }, 1500);
+        });
+
+        // Navigation scroll effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        mobileBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const isDecimal = target % 1 !== 0;
+                    const duration = 2000;
+                    const steps = 60;
+                    const increment = target / steps;
+                    let current = 0;
+
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = isDecimal ? current.toFixed(2) : Math.floor(current).toLocaleString();
+                            setTimeout(updateCounter, duration / steps);
+                        } else {
+                            counter.textContent = isDecimal ? target.toFixed(2) : target.toLocaleString();
+                        }
+                    };
+
+                    updateCounter();
+                    counterObserver.unobserve(counter);
+                }
+            });
+        }, observerOptions);
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // Fade in animation
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // Chart.js Configuration
+        Chart.defaults.color = '#a0a0a0';
+        Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
+
+        // Stock Price Chart
+        const stockCtx = document.getElementById('stockChart').getContext('2d');
+        const stockData = {
+            labels: ['2025-01', '2025-03', '2025-05', '2025-07', '2025-09', '2025-11', '2026-01'],
+            datasets: [{
+                label: '股价 (元)',
+                data: [1550, 1620, 1580, 1520, 1450, 1400, 1382],
+                borderColor: '#D4AF37',
+                backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#D4AF37',
+                pointBorderColor: '#1a1a2e',
+                pointBorderWidth: 3
+            }]
+        };
+
+        new Chart(stockCtx, {
+            type: 'line',
+            data: stockData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 46, 0.95)',
+                        titleColor: '#D4AF37',
+                        bodyColor: '#e8e8e8',
+                        borderColor: 'rgba(212, 175, 55, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'rgba(255,255,255,0.05)'
+                        },
+                        ticks: {
+                            callback: value => '¥' + value
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025E', '2026E'],
+                datasets: [{
+                    label: '营业收入',
+                    data: [1094, 1276, 1477, 1709, 1860, 2000],
+                    backgroundColor: [
+                        'rgba(139, 0, 0, 0.7)',
+                        'rgba(139, 0, 0, 0.7)',
+                        'rgba(139, 0, 0, 0.7)',
+                        'rgba(139, 0, 0, 0.7)',
+                        'rgba(212, 175, 55, 0.7)',
+                        'rgba(212, 175, 55, 0.5)'
+                    ],
+                    borderColor: [
+                        '#8B0000',
+                        '#8B0000',
+                        '#8B0000',
+                        '#8B0000',
+                        '#D4AF37',
+                        '#D4AF37'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Profit Chart
+        const profitCtx = document.getElementById('profitChart').getContext('2d');
+        new Chart(profitCtx, {
+            type: 'line',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025E', '2026E'],
+                datasets: [{
+                    label: '净利润',
+                    data: [525, 627, 747, 862, 910, 980],
+                    borderColor: '#D4AF37',
+                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#D4AF37'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Product Revenue Chart
+        const productCtx = document.getElementById('productChart').getContext('2d');
+        new Chart(productCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['茅台酒', '系列酒'],
+                datasets: [{
+                    data: [1459, 247],
+                    backgroundColor: [
+                        'rgba(139, 0, 0, 0.8)',
+                        'rgba(212, 175, 55, 0.8)'
+                    ],
+                    borderColor: [
+                        '#8B0000',
+                        '#D4AF37'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+
+        // Profitability Chart
+        const profitabilityCtx = document.getElementById('profitabilityChart').getContext('2d');
+        new Chart(profitabilityCtx, {
+            type: 'radar',
+            data: {
+                labels: ['毛利率', '净利率', 'ROE', 'ROIC', '资产周转率x10'],
+                datasets: [{
+                    label: '贵州茅台',
+                    data: [91.93, 52.27, 39.04, 31.53, 5.7],
+                    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                    borderColor: '#D4AF37',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#D4AF37',
+                    pointRadius: 4
+                }, {
+                    label: '行业平均',
+                    data: [65, 25, 15, 12, 4],
+                    backgroundColor: 'rgba(139, 0, 0, 0.2)',
+                    borderColor: '#8B0000',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#8B0000',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255,255,255,0.1)'
+                        },
+                        angleLines: {
+                            color: 'rgba(255,255,255,0.1)'
+                        },
+                        pointLabels: {
+                            color: '#a0a0a0'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Product tabs
+        const productTabs = document.querySelectorAll('.product-tab');
+        productTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                productTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
